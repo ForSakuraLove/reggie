@@ -52,10 +52,12 @@ public class EmployeeController {
         log.info("{}",employee);
 
         employee.setPassword(DigestUtils.md5DigestAsHex(("123456").getBytes(StandardCharsets.UTF_8)));
+        /**
         employee.setCreateTime(LocalDateTime.now());
         employee.setUpdateTime(LocalDateTime.now());
         employee.setCreateUser((Long)request.getSession().getAttribute("employee"));
         employee.setUpdateUser((Long)request.getSession().getAttribute("employee"));
+        */
         employeeService.save(employee);
         return R.success("新增员工成功");
     }
@@ -76,9 +78,20 @@ public class EmployeeController {
     @PutMapping
     public R<String> update(HttpServletRequest request,@RequestBody Employee employee){
         log.info(employee.toString());
+        /**
         employee.setUpdateTime(LocalDateTime.now());
         employee.setUpdateUser((Long)  request.getSession().getAttribute("employee"));
+         */
         employeeService.updateById(employee);
         return R.success("员工信息修改成功");
+    }
+
+    @GetMapping("/{id}")
+    public R<Employee> getById(@PathVariable Long id){
+        Employee employee = employeeService.getById(id);
+        if(employee != null){
+            return R.success(employee);
+        }
+        return  R.error("没有此用户");
     }
 }

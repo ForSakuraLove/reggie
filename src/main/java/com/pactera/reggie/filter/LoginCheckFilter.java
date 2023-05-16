@@ -1,6 +1,7 @@
 package com.pactera.reggie.filter;
 
 import com.alibaba.fastjson2.JSON;
+import com.pactera.reggie.common.BaseContext;
 import com.pactera.reggie.common.R;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
@@ -27,7 +28,6 @@ public class LoginCheckFilter implements Filter {
                 "/backend/**",
                 "front/**"
         };
-
         boolean check = check(urls, requestURI);
         if(check){
             log.info("本次请求{}不需要处理",requestURI);
@@ -36,6 +36,8 @@ public class LoginCheckFilter implements Filter {
         }
         if(request.getSession().getAttribute("employee") != null){
             log.info("用户已登录，id为{}",request.getSession().getAttribute("employee"));
+            Long empId = (Long) request.getSession().getAttribute("employee");
+            BaseContext.setCurrentId(empId);
             filterChain.doFilter(request,response);
             return;
         }
