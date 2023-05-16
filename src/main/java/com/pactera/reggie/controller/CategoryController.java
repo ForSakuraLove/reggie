@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pactera.reggie.common.R;
 import com.pactera.reggie.entity.Category;
 import com.pactera.reggie.service.CategoryService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
@@ -33,5 +35,12 @@ public class CategoryController {
         categoryService.remove(ids);
 
         return R.success("删除成功");
+    }
+
+    @PutMapping
+    public R<String> update(@RequestBody Category category){
+        log.info(category.toString());
+        categoryService.updateById(category);
+        return R.success("修改成功");
     }
 }
