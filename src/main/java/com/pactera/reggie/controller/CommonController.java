@@ -4,6 +4,7 @@ import com.pactera.reggie.common.R;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,16 +41,16 @@ public class CommonController {
 
     }
 
-    @PostMapping("/download")
+    @GetMapping("/download")
     public R<String> download(String name , HttpServletResponse response){
         try {
-            FileInputStream fileInputStream = new FileInputStream(new File(basePath + name));
+            FileInputStream fileInputStream = new FileInputStream(basePath + name);
 
             ServletOutputStream outputStream = response.getOutputStream();
             response.setContentType("image/jpeg");
             int len;
             byte[] bytes = new byte[1024];
-            while ((len = fileInputStream.read(bytes))!=1){
+            while ((len = fileInputStream.read(bytes))!=-1){
                 outputStream.write(bytes,0,len);
                 outputStream.flush();
             }
