@@ -1,11 +1,13 @@
 package com.pactera.reggie.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pactera.reggie.common.R;
 import com.pactera.reggie.entity.Employee;
 import com.pactera.reggie.service.EmployeeService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
@@ -56,5 +58,27 @@ public class EmployeeController {
         employee.setUpdateUser((Long)request.getSession().getAttribute("employee"));
         employeeService.save(employee);
         return R.success("新增员工成功");
+    }
+
+    @GetMapping("/page")
+    public R<Page<Employee>> page(int page,int pageSize,String name){
+        log.info("page = {},pageSize = {} , name = {}",page,pageSize,name);
+        Page pageInfo = new Page();
+
+        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper();
+
+        queryWrapper.like(StringUtils.isNotEmpty(name),Employee::getName,name);
+        queryWrapper.orderByDesc(Employee::getUpdateTime);
+
+        employeeService.page(pageInfo,queryWrapper);
+        return R.success(pageInfo);
+    }
+    @PutMapping
+    public R<String> update(HttpServletRequest request,@RequestBody Employee employee){
+        log.info(employee.toString());
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser((Long)  request.getSession().getAttribute("employee"));
+        employeeService.updateById(employee);
+        return R.success("员工信息修改成功");
     }
 }
