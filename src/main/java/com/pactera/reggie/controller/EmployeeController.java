@@ -13,7 +13,6 @@ import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 
 @Slf4j
 @RestController
@@ -65,7 +64,7 @@ public class EmployeeController {
     @GetMapping("/page")
     public R<Page<Employee>> page(int page,int pageSize,String name){
         log.info("page = {},pageSize = {} , name = {}",page,pageSize,name);
-        Page pageInfo = new Page();
+        Page<Employee> pageInfo = new Page<>(page,pageSize);
 
         LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper();
 
