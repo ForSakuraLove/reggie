@@ -7,6 +7,7 @@ import com.pactera.reggie.dto.DishDto;
 import com.pactera.reggie.dto.SetmealDto;
 import com.pactera.reggie.entity.Category;
 import com.pactera.reggie.entity.Dish;
+import com.pactera.reggie.entity.DishFlavor;
 import com.pactera.reggie.service.CategoryService;
 import com.pactera.reggie.service.DishFlavorService;
 import com.pactera.reggie.service.DishService;
@@ -80,11 +81,30 @@ public class DishController {
         dishService.removeBatchByIds(Arrays.asList(ids));
         return R.success("删除成功");
     }
+//    @GetMapping("/list")
+//    public R<List<Dish>> getByCategoryId(Long categoryId){
+//        LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
+//        queryWrapper.eq(Dish::getCategoryId,categoryId);
+//        List<Dish> dishList = dishService.list(queryWrapper);
+//        return R.success(dishList);
+//    }
     @GetMapping("/list")
-    public R<List<Dish>> getByCategoryId(Long categoryId){
+    public R<List<DishDto>> getByCategoryId(Long categoryId){
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Dish::getCategoryId,categoryId);
         List<Dish> dishList = dishService.list(queryWrapper);
-        return R.success(dishList);
+        List<DishDto> dishDtoList;
+        dishDtoList = dishList.stream().map((item)->{
+            DishDto dishDto = new DishDto();
+            BeanUtils.copyProperties(item,dishDto);
+            Category category = categoryService.getById(item.getCategoryId());
+            dishDto.setCategoryName(category.getName());
+            LambdaQueryWrapper<DishFlavor> queryWrapper1 = new LambdaQueryWrapper<>();
+            queryWrapper1.eq(DishFlavor::getDishId,item.getId());
+            List<DishFlavor> dishFlavors = dishFlavorService.list(queryWrapper1);
+            dishDto.setFlavors(dishFlavors);
+            return dishDto;
+        }).collect(Collectors.toList());
+        return R.success(dishDtoList);
     }
 }

@@ -85,4 +85,10 @@ public class SetmealController {
         }
         return R.success("删除成功");
     }
+    @GetMapping("/list")
+    public R<List<SetmealDto>> get(Long categoryId,int status){
+        List<SetmealDto> setmealDtoList = setmealService.getByCategoryId(categoryId);
+        setmealDtoList.removeIf(setmealDto -> setmealDto.getStatus() == 0);
+        return R.success(setmealDtoList);
+    }
 }

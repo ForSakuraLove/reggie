@@ -1,5 +1,6 @@
 package com.pactera.reggie.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pactera.reggie.common.R;
 import com.pactera.reggie.entity.Orders;
@@ -18,9 +19,6 @@ public class OrdersController {
     @Autowired
     private OrdersService ordersService;
 
-    @GetMapping("/page")
-    public R<Page<Orders>> page(int page, int pageSize , Long number, LocalDateTime beginTime,LocalDateTime endTime){
-        return null;
-    }
+
 
 }

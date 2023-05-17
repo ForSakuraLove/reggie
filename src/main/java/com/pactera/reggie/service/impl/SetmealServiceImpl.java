@@ -55,4 +55,21 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal>  imp
         }).collect(Collectors.toList());
         setmealDishService.saveBatch(setmealDishes);
     }
+
+    @Override
+    public List<SetmealDto> getByCategoryId(Long categoryId) {
+        LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Setmeal::getCategoryId,categoryId);
+        List<Setmeal> setmealList = this.list(queryWrapper);
+        List<SetmealDto> setmealDtoList = setmealList.stream().map((item)->{
+            SetmealDto setmealDto = new SetmealDto();
+            BeanUtils.copyProperties(item,setmealDto);
+            LambdaQueryWrapper<SetmealDish> lambdaQueryWrapper =new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(SetmealDish::getSetmealId,item.getId());
+            List<SetmealDish> setmealDishList = setmealDishService.list(lambdaQueryWrapper);
+            setmealDto.setSetmealDishes(setmealDishList);
+            return setmealDto;
+        }).collect(Collectors.toList());
+        return setmealDtoList;
+    }
 }

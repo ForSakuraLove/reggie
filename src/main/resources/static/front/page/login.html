@@ -6,6 +6,8 @@
         <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=no,minimal-ui">
         <title>菩提阁</title>
+<!--        <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14"></script>-->
+
         <link rel="icon" href="./../images/favico.ico">
         <!--不同屏幕尺寸根字体设置-->
         <script src="./../js/base.js"></script>
@@ -28,7 +30,7 @@
                 <span @click='getCode'>获取验证码</span>
             </div>
             <div class="divMsg" v-if="msgFlag">手机号输入不正确，请重新输入</div>
-            <el-button type="primary" :class="{btnSubmit:1===1,btnNoPhone:!form.phone,btnPhone:form.phone}" @click="btnLogin">登录</el-button>
+            <button type="primary" :class="{btnSubmit:1===1,btnNoPhone:!form.phone,btnPhone:form.phone}" @click="btnLogin">登录</button>
         </div>
         <!-- 开发环境版本，包含了有帮助的命令行警告 -->
         <script src="../../backend/plugins/vue/vue.js"></script>
@@ -68,17 +70,27 @@
                         this.msgFlag = true
                     }
                 },
+                // btnLogin(){
+                //     console.log("qqqqqqqqqqqqqqqq")
+                //     // if (this.form.phone && this.form.code)
+                // },
                 async btnLogin(){
+                    console.log(this.form.phone,this.form.code,"111111111")
+
                     if(this.form.phone && this.form.code){
+                        console.log("1111111111111111")
                         this.loading = true
                         const res = await loginApi({phone:this.form.phone})
                         this.loading = false
+                        console.log(res,res.code,'bbbbbbbbbbbbb')
                         if(res.code === 1){
+                            console.log("2222222222")
                             sessionStorage.setItem("userPhone",this.form.phone)
                             window.requestAnimationFrame(()=>{
                                 window.location.href= '/front/index.html'
-                            })                           
+                            })
                         }else{
+                            console.log("33333333333333")
                             this.$notify({ type:'warning', message:res.msg});
                         }
                     }else{
