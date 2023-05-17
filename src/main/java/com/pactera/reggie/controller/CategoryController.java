@@ -49,10 +49,4 @@ public class CategoryController {
         return R.success(list);
     }
 
-    @GetMapping
-    public R<String> updae(@RequestBody Category category){
-        log.info(category.toString());
-        categoryService.updateById(category);
-        return R.success("修改成功");
-    }
 }
